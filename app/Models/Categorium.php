@@ -32,6 +32,7 @@ class Categorium extends Model
 
 	public function recompensa()
 	{
-		return $this->hasOne(Recompensa::class, 'idcategoria');
+		return $this->hasMany(Recompensa::class, 'idcategoria', 'idRecompensa');
+		
 	}
 }

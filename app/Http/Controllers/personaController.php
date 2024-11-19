@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PersonaModel;
+use App\Models\Persona;
 use App\Models\Persona_escuelaModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +14,7 @@ class personaController extends Controller
 {
     public function index(): JsonResponse
     {
-        $persona = PersonaModel::all(); 
+        $persona = Persona::all(); 
         return response()->json(['data' => $persona], 200);
     }
 
@@ -40,7 +40,7 @@ class personaController extends Controller
         }
 
         try {
-            $persona = PersonaModel::create($request->only([
+            $persona = Persona::create($request->only([
                 'nombre', 
                 'apellido', 
                 'fechaNacimiento', 
