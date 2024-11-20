@@ -7,15 +7,18 @@ use App\Models\Categorium;
 
 class categoriaController extends Controller
 {
-    public function index(Request $request){
-        // Capturamos el térmno de búsqueda del request
+    public function index(Request $request)
+    {
+        // Capturamos el término de búsqueda del request
         $search = $request->input('search');
 
-        // Si hay un término de búsqueda, filtra las categías
-        $categorias = Categorium::when($search, function ($query, $search){
+        // Si hay un término de búsqueda, filtra las categorías
+        $categorias = Categorium::when($search, function ($query, $search) {
             $query->where('nombreCategoria', 'like', "%{$search}%")
-            ->orWhere('descripcion', 'like',"%{$search}");
+                ->orWhere('descripcion', 'like', "%{$search}%");
         })->get();
+
+        return view('categorias.index', compact('categorias'));
     }
 
     public function create()
@@ -27,46 +30,48 @@ class categoriaController extends Controller
     {
         // Validar los datos
         $validatedData = $request->validate([
-            'nombre' => 'required|string|max:40',
-            'descripcion' => 'nullable|string|max:2005',            
+            'nombreCategoria' => 'required|string|max:40',
+            'descripcion' => 'nullable|string|max:2005',
         ]);
 
-        // Guardamos en base de datos
-        Categorium::created($validatedData);
+        // Guardamos la categoría en base de datos
+        Categorium::create($validatedData);
 
-        // Redigirimos con mensaje de éxito
-        return redirect('categorias.index')->with('success', 'Categoría creata exitosamente');
+        // Redirigimos con mensaje de éxito
+        return redirect()->route('categorias.index')->with('success', 'Categoría creada exitosamente');
     }
 
     public function show(Categorium $categorium)
     {
-        return view('categorias.show', compact('categorias')); 
-    } 
+        return view('categorias.show', compact('categorium'));
+    }
 
     public function edit(Categorium $categorium)
     {
-        return view('categorias.edit', compact('categorias'));
+        return view('categorias.edit', compact('categorium'));
     }
 
-    public function update(Categorium $categorium, Request $request){
-        // Validamos los datos
-        $validateData = $request->validate([
-            'nombreCategoria' => 'string|required|max:40',
-            'descripcion' => 'string|max:2005',
+    public function update(Categorium $categorium, Request $request)
+    {
+        // Validar los datos
+        $validatedData = $request->validate([
+            'nombreCategoria' => 'required|string|max:40',
+            'descripcion' => 'nullable|string|max:2005',
         ]);
 
         // Actualizar la categoría
-        $categorium->update($validateData);
+        $categorium->update($validatedData);
 
-        //Redirigir con mensaje de éxito
-        return redirect()->route('categoria.index')->with('succes', 'Categoría actualizada exitosamente.');
+        // Redirigir con mensaje de éxito
+        return redirect()->route('categorias.index')->with('success', 'Categoría actualizada exitosamente');
     }
 
     public function destroy(Categorium $categorium)
     {
+        // Eliminar la categoría
         $categorium->delete();
 
-        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente.');
+        // Redirigir con mensaje de éxito
+        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente');
     }
 }
-

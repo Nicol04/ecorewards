@@ -1,63 +1,105 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\JsonResponse;
-use App\Models\escuelasModel;
+
+use App\Models\Escuela;
 use Illuminate\Http\Request;
-use App\Config\responseHttp;
-use Illuminate\Support\Facades\Validator;
-use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class escuelasController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * Mostrar la lista de escuelas.
+     */
+    public function index()
     {
-        try {
-            $escuelas = escuelasModel::all();
-            return response()->json(['data' => $escuelas], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al listar las escuelas: ' . $e->getMessage()], 500);
-        }
+        $escuelas = Escuela::all();
+        return view('escuelas.index', compact('escuelas'));
     }
+
+    /**
+     * Mostrar el formulario para crear una nueva escuela.
+     */
+    public function create()
+    {
+        return view('escuelas.create');
+    }
+
+    /**
+     * Guardar una nueva escuela en la base de datos.
+     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nombreEscuela' => 'required|string|max:150|unique:escuelas,nombreEscuela',
-            'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|size:9',
-            'director' => 'required|string|max:100',
-            'logoEscuela' => 'nullable|string|max:255',
-        ], [
-            'nombreEscuela.required' => 'El nombre de la escuela es obligatorio.',
-            'nombreEscuela.string' => 'El nombre de la escuela debe ser una cadena de caracteres.',
-            'nombreEscuela.max' => 'El nombre de la escuela no puede exceder los 150 caracteres.',
-            'nombreEscuela.unique' => 'Ya existe una escuela con este nombre.',
-            'direccion.required' => 'La dirección es obligatoria.',
-            'direccion.string' => 'La dirección debe ser una cadena de caracteres.',
-            'direccion.max' => 'La dirección no puede exceder los 255 caracteres.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.size' => 'El teléfono debe contener exactamente 9 dígitos.',
-            'director.required' => 'El director es obligatorio.',
-            'director.string' => 'El director debe ser una cadena de caracteres.',
-            'director.max' => 'El nombre del director no puede exceder los 100 caracteres.',
-            'logoEscuela.nullable' => 'El logo de la escuela es opcional.',
-            'logoEscuela.string' => 'El logo debe ser una cadena de caracteres (ruta o URL).',
-            'logoEscuela.max' => 'La ruta o URL del logo no puede exceder los 255 caracteres.',
+        $validatedData = $request->validate([
+            'nombreEscuela' => 'required|string|max:255',
+            'direccion' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'director' => 'nullable|string|max:255',
+            'logoEscuela' => 'required|image|max:2048',
         ]);
-        if ($validator->fails()) {
-            return responseHttp::status400($validator->errors()->first());
+
+        if ($request->hasFile('logoEscuela')) {
+            $validatedData['logoEscuela'] = $request->file('logoEscuela')->store('logos', 'public');
         }
-        try {
-            $escuela = escuelasModel::create($request->only([
-                'nombreEscuela', 
-                'direccion', 
-                'telefono', 
-                'director', 
-                'logoEscuela'
-            ]));
-            return responseHttp::status201('Escuela creada con éxito');
-        } catch (Exception $e) {
-            return responseHttp::status400('Error al crear la escuela: ' . $e->getMessage());
+
+        Escuela::create($validatedData);
+
+        return redirect()->route('escuelas.index')->with('success', 'Escuela creada con éxito.');
+    }
+
+    /**
+     * Mostrar los detalles de una escuela específica.
+     */
+    public function show(Escuela $escuela)
+    {
+        return view('escuelas.show', compact('escuela'));
+    }
+
+    /**
+     * Mostrar el formulario para editar una escuela existente.
+     */
+    public function edit(Escuela $escuela)
+    {
+        return view('escuelas.edit', compact('escuela'));
+    }
+
+    /**
+     * Actualizar una escuela en la base de datos.
+     */
+    public function update(Request $request, Escuela $escuela)
+    {
+        $validatedData = $request->validate([
+            'nombreEscuela' => 'required|string|max:255',
+            'direccion' => 'nullable|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'director' => 'nullable|string|max:255',
+            'logoEscuela' => 'nullable|image|max:2048',
+        ]);
+
+        if ($request->hasFile('logoEscuela')) {
+            // Eliminar el logo antiguo si existe
+            if ($escuela->logoEscuela) {
+                Storage::disk('public')->delete($escuela->logoEscuela);
+            }
+            $validatedData['logoEscuela'] = $request->file('logoEscuela')->store('logos', 'public');
         }
+
+        $escuela->update($validatedData);
+
+        return redirect()->route('escuelas.index')->with('success', 'Escuela actualizada con éxito.');
+    }
+
+    /**
+     * Eliminar una escuela de la base de datos.
+     */
+    public function destroy(Escuela $escuela)
+    {
+        if ($escuela->logoEscuela) {
+            Storage::disk('public')->delete($escuela->logoEscuela);
+        }
+
+        $escuela->delete();
+
+        return redirect()->route('escuelas.index')->with('success', 'Escuela eliminada con éxito.');
     }
 }
