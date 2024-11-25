@@ -41,14 +41,14 @@ class categoriaController extends Controller
         return redirect()->route('categorias.index')->with('success', 'Categoría creada exitosamente');
     }
 
-    public function show(Categorium $categorium)
+    public function show(Categorium $categoria)
     {
         return view('categorias.show', compact('categorium'));
     }
 
-    public function edit(Categorium $categorium)
+    public function edit(Categorium $categoria)
     {
-        return view('categorias.edit', compact('categorium'));
+        return view('categorias.edit', compact('categoria'));
     }
 
     public function update(Categorium $categorium, Request $request)

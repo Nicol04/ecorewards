@@ -31,7 +31,7 @@
         <tbody>
             @foreach ($categorias as $categoria)
             <tr>
-                <td>{{ $categoria->nombreCategoria }}</td>
+                <td>{{ $categoria->nombrecategoria }}</td>
                 <td>{{ $categoria->descripcion }}</td>
                 <td>
                     <a href="{{ route('categorias.edit', $categoria) }}" class="btn btn-warning">Editar</a>

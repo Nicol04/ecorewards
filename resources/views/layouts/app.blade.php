@@ -51,6 +51,17 @@
                             <a class="nav-link" href="{{ route('usuarios.index') }}">{{ __('Usuarios') }}</a>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('materials.index') }}">{{ __('Materiales') }}</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('recompensas.index') }}">{{ __('Recompensas') }}</a>
+                        </li>
+
+
+
+
                         @guest
 
                             

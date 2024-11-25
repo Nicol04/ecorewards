@@ -7,7 +7,7 @@
         name="nombreCategoria" 
         id="nombreCategoria" 
         class="form-control @error('nombreCategoria') is-invalid @enderror" 
-        value="{{ old('nombreCategoria', $categorium->nombreCategoria ?? '') }}" 
+        value="{{ old('nombreCategoria', $categoria->nombreCategoria ?? '') }}" 
         required
     >
     @error('nombreCategoria')
@@ -22,7 +22,7 @@
         id="descripcion" 
         class="form-control @error('descripcion') is-invalid @enderror"
         rows="4"
-    >{{ old('descripcion', $categorium->descripcion ?? '') }}</textarea>
+    >{{ old('descripcion', $categoria->descripcion ?? '') }}</textarea>
     @error('descripcion')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror

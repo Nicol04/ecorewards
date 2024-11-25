@@ -4,22 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\Categorium;
 use App\Models\Recompensa;
-use App\Models\recompensaModel;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Exception;
 
 class recompensaController extends Controller
 {
-    public function index(request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request)
     {
+
+        $categorias = Categorium::all();
+        Log::info('Listando recompensas con filtros.', $request->all());
+
         // Variable para guardar la consulta SQL
         $query = Recompensa::query();
+
         // Filtrar por categoría
         if ($request->filled('idcategoria')) {
-
-            // Con select de name = 'idcategoria
             $query->where('idcategoria', $request->input('idcategoria'));
         }
 
@@ -28,12 +32,10 @@ class recompensaController extends Controller
             $query->where('nombreRecompensa', 'like', '%' . $request->input('nombre') . '%');
         }
 
-        // Filtrar por puntos requeridos
-        if ($request->filled('puntos Requeridos')) {
-            $query->where('puntosRequeridos', $request->input('puntos Requeridos'));
+        // Filtrar por puntos requeridos (exacto o rango)
+        if ($request->filled('puntosRequeridos')) {
+            $query->where('puntosRequeridos', $request->input('puntosRequeridos'));
         }
-
-        // Filtrar por puntos requeridos (rango o exacto)
         if ($request->filled('puntosMin')) {
             $query->where('puntosRequeridos', '>=', $request->input('puntosMin'));
         }
@@ -53,58 +55,94 @@ class recompensaController extends Controller
             });
         }
 
-        $recompensa = $query->get();
-        return view('recompensas.index', compact('recompensas'));
+        $recompensas = $query->get();
+        return view('recompensas.index', compact('recompensas', 'categorias'));
     }
-    public function store(Request $request) 
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        $validatedData = $request->validate([
-            'nombreRecompensa' => 'unique|string|max:50',
-            'descripcion' => 'nullable|string',
-            'puntosRequeridos' => 'required|integer|min:1',
-            'imagen' => 'nullable|image|max:2049', // Validar que sea una image
-            'idcategoria' => 'required|exists:categoria, idCategria',
+        $categorias = Categorium::all();
+        return view('recompensas.create', compact('categorias'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombreRecompensa' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'puntosRequeridos' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'imagen' => 'nullable|string|max:255',
+            'idcategoria' => 'required|integer|exists:categoria,idcategoria',
         ]);
 
-        try{
-            // Procesar image
-            if($request->hasFile('image')) {
-                $validatedData['imagen'] = file_get_contents($request->file('imagen')->getRealPath());
-            }
-
-            Recompensa::create($validatedData);
-            return redirect()->route('recompensas.index')->with('success', 'Recompensa creada exitosamente.');
-        }
-        catch (\Exception $e){
-            return redirect()->route('recompensas.index')->with('error', 'Error al crear la recompensa: ' . $e->getMessage());
+        if ($validator->fails()) {
+            Log::error('Error al crear recompensa.', ['errors' => $validator->errors()->all()]);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $recompensa = Recompensa::create($request->all());
+        Log::info('Recompensa creada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
+
+        return redirect()->route('recompensas.index')->with('success', 'Recompensa creada correctamente.');
     }
 
-    public function show(Recompensa $recompensa) 
+    /**
+     * Display the specified resource.
+     */
+    public function show(Recompensa $recompensa)
     {
-        return view('recompensa.show', compact('recompensa'));
+        return view('recompensas.show', compact('recompensa'));
     }
 
-    public function update(Request $request, Recompensa $recompensa) 
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Recompensa $recompensa)
     {
-        $validatedData = $request->validate([
-            'nombreRecompensa' => 'unique|string|max:50',
-            'descripcion' => 'nullable|string',
-            'puntosRequeridos' => 'required|integer|min:1',
-            'imagen' => 'nullable|image|max:2049', // Validar que sea una image
-            'idcategoria' => 'required|exists:categoria, idCategria',
+        $categorias = Categorium::all();
+        return view('recompensas.edit', compact('recompensa', 'categorias'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Recompensa $recompensa)
+    {
+        $validator = Validator::make($request->all(), [
+            'nombreRecompensa' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'puntosRequeridos' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'imagen' => 'nullable|string|max:255',
+            'idcategoria' => 'required|integer|exists:categoria,idcategoria',
         ]);
 
-        $recompensa->update($validatedData);
+        if ($validator->fails()) {
+            Log::error('Error al actualizar recompensa.', ['idRecompensa' => $recompensa->idRecompensa, 'errors' => $validator->errors()->all()]);
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        return redirect()->route('recompensas.index')->with('success', 'Recompensa actualizada exitosamente');
+        $recompensa->update($request->all());
+        Log::info('Recompensa actualizada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
+
+        return redirect()->route('recompensas.index')->with('success', 'Recompensa actualizada correctamente.');
     }
 
-    public function destroy(Recompensa $recompensa) {
-        // Elminar la recompensa
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Recompensa $recompensa)
+    {
         $recompensa->delete();
+        Log::info('Recompensa eliminada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
-        return redirect()->route('categorias.index');
+        return redirect()->route('recompensas.index')->with('success', 'Recompensa eliminada correctamente.');
     }
 }
