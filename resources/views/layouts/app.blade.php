@@ -46,6 +46,11 @@
                             <a class="nav-link" href="{{ route('categorias.index') }}">{{ __('Categorias') }}</a>
                         </li>
 
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('usuarios.index') }}">{{ __('Usuarios') }}</a>
+                        </li>
+
                         @guest
 
                             

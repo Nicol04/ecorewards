@@ -13,7 +13,24 @@
 
             <div class="form-group">
                 <label for="tipoUsuario">Tipo de Usuario</label>
-                <input type="text" class="form-control" id="tipoUsuario" name="tipoUsuario" value="{{ old('tipoUsuario') }}" required>
+                <select name="tipoUsuario" id="tipoUsuario" class="form-control" required>
+                    @php
+                        // Lista de opciones disponibles
+                        $tiposUsuario = [
+                            'Docente' => 'Docente',
+                            'Administrador' => 'Administrador',
+                            'Director' => 'Director',
+                            'Estudiante' => 'Estudiante',
+                        ];
+                    @endphp
+            
+                    @foreach ($tiposUsuario as $value => $label)
+                        <option value="{{ $value }}"
+                            {{ old('tipoUsuario', $usuario->tipoUsuario ?? '') == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-group">

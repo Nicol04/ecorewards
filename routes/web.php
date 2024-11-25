@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\escuelasController;
+use App\Http\Controllers\usuarioController;
 
 // routes/web.php
 
@@ -23,6 +24,14 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->midd
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('escuelas', escuelasController::class);
+});
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::resource('usuarios', UsuarioController::class);
+});
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::resource('materiales', UsuarioController::class);
 });
 
 

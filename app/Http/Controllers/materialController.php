@@ -2,60 +2,110 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\materialModel;
-use Illuminate\Http\JsonResponse;
+use App\Models\Material;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Exception;
-use App\Config\responseHttp;
+use Illuminate\Support\Facades\Log;
 
 class materialController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * Display a listing of the materials.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
     {
-        $materiales = materialModel::all(); 
-        return response()->json(['data' => $materiales], 200);
+        Log::info('Fetching all materials');
+        $materials = Material::all();
+        return view('materials.index', compact('materials'));
     }
 
+    /**
+     * Show the form for creating a new material.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('materials.create');
+    }
+
+    /**
+     * Store a newly created material in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nombreMaterial' => 'required|string|max:50',
-            'precioKg' => 'required|numeric|between:0,99999999999.99', // Regla de validación corregida
-        ], [
-            'nombreMaterial.required' => 'El nombre es obligatorio.',
-            'precioKg.required' => 'El precio es obligatorio.',
-            'precioKg.numeric' => 'El precio debe ser un número válido.',
+        $validatedData = $request->validate([
+            'nombreMaterial' => 'required|string|max:255',
+            'precioKg' => 'required|numeric|min:0',
         ]);
 
-        if ($validator->fails()) {
-            return responseHttp::status400($validator->errors()->first());
-        }
+        Log::info('Creating new material', $validatedData);
+        $material = Material::create($validatedData);
 
-        try {
-            $material = materialModel::create($request->only([
-                'nombreMaterial', 
-                'precioKg',
-            ]));
-
-            return responseHttp::status201('El material fue creado con éxito');
-        } catch (Exception $e) {
-            return responseHttp::status400('Error al crear el material: ' . $e->getMessage());
-        }
+        Log::info('Material created successfully', ['id' => $material->idMaterial]);
+        return redirect()->route('materials.index')->with('success', 'Material created successfully.');
     }
 
-    // Método para actualizar un material
-    public function update(Request $request, $id): JsonResponse
+    /**
+     * Display the specified material.
+     *
+     * @param  Material  $material
+     * @return \Illuminate\View\View
+     */
+    public function show(Material $material)
     {
-        try {
-            $material = materialModel::findOrFail($id); // Buscar el material por ID
-            $material->update($request->only(['nombreMaterial', 'precioKg'])); // Actualizar los campos
+        Log::info('Displaying material', ['id' => $material->idMaterial]);
+        return view('materials.show', compact('material'));
+    }
 
-            return response()->json(['message' => 'Material Actualizado satisfactoriamente', 'data' => $material], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'Material no encontrado'], 404);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar el material: ' . $e->getMessage()], 500);
-        }
+    /**
+     * Show the form for editing the specified material.
+     *
+     * @param  Material  $material
+     * @return \Illuminate\View\View
+     */
+    public function edit(Material $material)
+    {
+        return view('materials.edit', compact('material'));
+    }
+
+    /**
+     * Update the specified material in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Material  $material
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Material $material)
+    {
+        $validatedData = $request->validate([
+            'nombreMaterial' => 'required|string|max:255',
+            'precioKg' => 'required|numeric|min:0',
+        ]);
+
+        Log::info('Updating material', ['id' => $material->idMaterial, 'data' => $validatedData]);
+        $material->update($validatedData);
+
+        Log::info('Material updated successfully', ['id' => $material->idMaterial]);
+        return redirect()->route('materials.index')->with('success', 'Material updated successfully.');
+    }
+
+    /**
+     * Remove the specified material from storage.
+     *
+     * @param  Material  $material
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Material $material)
+    {
+        Log::warning('Deleting material', ['id' => $material->idMaterial]);
+        $material->delete();
+
+        Log::info('Material deleted successfully', ['id' => $material->idMaterial]);
+        return redirect()->route('materials.index')->with('success', 'Material deleted successfully.');
     }
 }

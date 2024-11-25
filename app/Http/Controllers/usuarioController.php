@@ -1,88 +1,150 @@
 <?php
+
 namespace App\Http\Controllers;
-use Illuminate\Http\Request;
+
 use App\Models\Usuario;
-use App\Models\PersonaModel;
-use App\Models\Persona_escuelaModel;
-use Exception;
-use Illuminate\Http\JsonResponse;
-use App\Config\ResponseHttp;
+use App\Models\Persona;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Hash; 
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log; // Asegúrate de importar la clase Log
+
 
 class usuarioController extends Controller
 {
-    protected $personaController;
-
-    public function __construct(PersonaController $personaController)
+    // Mostrar listado de usuarios
+    public function index()
     {
-        $this->personaController = $personaController;
-    }
-    public function index(): JsonResponse
-    {
-        try {
-            $usuarios = Usuario::all();
-            return response()->json(['data' => $usuarios], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al listar los usuarios: ' . $e->getMessage()], 500);
-        }
+        $usuarios = Usuario::with('persona')->paginate(10); // Obtener usuarios con sus personas asociadas
+        return view('usuarios.index', compact('usuarios'));
     }
 
+    // Mostrar formulario de creación de usuario
+    public function create()
+    {
+        return view('usuarios.create');
+    }
+
+    // Almacenar un nuevo usuario
     public function store(Request $request)
     {
+        // Validación de los datos
         $validator = Validator::make($request->all(), [
-            'nombreUsuario' => 'required|string|max:15|unique:usuario,nombreUsuario', 
-            'password' => 'required|string|regex:/^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9.]{1,8}$/',
-            'email' => 'required|email|max:90|unique:usuario,correoElectronico', 
-            'tipoUsuario' => 'required|string|in:Estudiante,Docente,Director,Administrador', 
-        ], [
-            'nombreUsuario.required' => 'Escribe un nombre de usuario que te identifique',
-            'nombreUsuario.unique' => 'Este nombre de usuario ya está en uso',
-            'nombreUsuario.max' => 'El nombre de usuario no debe tener más de 15 caracteres.',
-            'password.required' => 'La contraseña es obligatoria.',
-            'password.regex' => 'La contraseña debe contener letras, números y puntos, con un máximo de 8 caracteres.',
-            'email.required' => 'El correo electrónico es obligatorio.',
-            'email.unique' => 'Este correo electrónico ya está registrado.',
-            'tipoUsuario.required' => 'Debe seleccionar un tipo de usuario válido.',
-            'tipoUsuario.in' => 'El tipo de usuario seleccionado no es válido.',
+            'nombreUsuario' => 'required|string|max:255',
+            'tipoUsuario' => 'required|string|max:255',
+            'email' => 'required|email|unique:usuario,email',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
+            Log::error('Validación fallida', [
+                'errors' => $validator->errors(),
+                'input' => $request->all()
+            ]);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         try {
-            $hashedPassword = Hash::make($request->input('contrasena'));
+            // Crear el usuario
             $usuario = Usuario::create([
-                'nombreUsuario' => $request->input('nombreUsuario'),
-                'password' => $hashedPassword, 
-                'email' => $request->input('correoElectronico'),
-                'tipoUsuario' => $request->input('tipoUsuario'),
+                'nombreUsuario' => $request->nombreUsuario,
+                'tipoUsuario' => $request->tipoUsuario,
+                'email' => $request->email,
+                'password' => Hash::make($request->password), // Encriptar la contraseña
             ]);
 
-            return response()->json(['message' => 'Usuario creado con éxito'], 201);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Error al crear al usuario: ' . $e->getMessage()], 400);
-        }
-    }
+            Log::info('Usuario creado', ['usuario_id' => $usuario->idUsuario]);
 
-    
-    // Método para actualizar un usuario
-    public function update(Request $request, $id): JsonResponse
-    {
-        try {
-            $usuario = Usuario::findOrFail($id); // Buscar usuario por ID
-            $usuario->update($request->only(['nombreUsuario', 'correoElectronico', 'tipoUsuario'])); // Actualizar campos
+            // Crear la persona asociada
+            Persona::create([
+                'idusuario' => $usuario->idUsuario,
+                'nombre' => $request->nombrePersona,
+                'apellido' => $request->apellidoPersona,
+                'fechaNacimiento' => $request->fechaNacimiento,
+                'direccion' => $request->direccion,
+                'telefono' => $request->telefono,
+                'genero' => $request->genero,
+                'foto' => $request->foto,
+            ]);
 
-            // Puedes incluir más lógica aquí si es necesario
+            Log::info('Persona asociada al usuario', ['usuario_id' => $usuario->idUsuario]);
 
-            return response()->json(['message' => 'Usuario actualizado satisfactoriamente'], 200);
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return response()->json(['error' => 'Usuario no encontrado'], 404);
+            return redirect()->route('usuarios.index')->with('success', 'Usuario creado correctamente');
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar el usuario: ' . $e->getMessage()], 500);
+            Log::error('Error al crear el usuario', [
+                'exception' => $e->getMessage(),
+                'input' => $request->all()
+            ]);
+            return redirect()->back()->with('error', 'Hubo un problema al crear el usuario');
         }
     }
-    
+
+    // Mostrar el formulario de edición de un usuario
+    public function edit($id)
+    {
+        $usuario = Usuario::with('persona')->findOrFail($id);
+        return view('usuarios.edit', compact('usuario'));
+    }
+
+    // Mostrar detalles de un usuario
+    public function show($id)
+    {
+        // Obtener el usuario con su persona asociada
+        $usuario = Usuario::with('persona')->findOrFail($id);
+
+        // Retornar la vista de detalle, pasando el usuario
+        return view('usuarios.show', compact('usuario'));
+    }
+
+
+    // Actualizar un usuario
+    public function update(Request $request, $id)
+    {
+        $usuario = Usuario::findOrFail($id);
+
+        // Validación de los datos
+        $validator = Validator::make($request->all(), [
+            'nombreUsuario' => 'required|string|max:255',
+            'tipoUsuario' => 'required|string|max:255',
+            'email' => 'required|email|unique:usuario,email,' . $id . ',idUsuario',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Actualizar el usuario
+        $usuario->update([
+            'nombreUsuario' => $request->nombreUsuario,
+            'tipoUsuario' => $request->tipoUsuario,
+            'email' => $request->email,
+            'password' => $request->password ? Hash::make($request->password) : $usuario->password,
+        ]);
+
+        // Actualizar la persona asociada
+        $persona = $usuario->persona;
+        $persona->update([
+            'nombre' => $request->nombrePersona,
+            'apellido' => $request->apellidoPersona,
+            'fechaNacimiento' => $request->fechaNacimiento,
+            'direccion' => $request->direccion,
+            'telefono' => $request->telefono,
+            'genero' => $request->genero,
+            'foto' => $request->foto,
+        ]);
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuario actualizado correctamente');
+    }
+
+    // Eliminar un usuario
+    public function destroy($id)
+    {
+        $usuario = Usuario::findOrFail($id);
+
+        // Eliminar el usuario
+        $usuario->delete();
+
+        return redirect()->route('usuarios.index')->with('success', 'Usuario eliminado correctamente');
+    }
 }
