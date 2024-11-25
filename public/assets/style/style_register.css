@@ -1,0 +1,199 @@
+body {
+    background-image: url('../img/fondo1.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: 'Grandstander', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px; /* Reducido el padding */
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 350px; /* Mantiene el tamaño más pequeño */
+    margin: 0 10px;
+}
+
+.motivational-container {
+    text-align: center;
+    background-color: white;
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    width: 33%;
+    height: auto;
+    margin-left: 10px;
+}
+
+.motivational-image {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.motivational-phrase {
+    font-family: "All the Way to the Sun", sans-serif;
+    font-size: 20px; /* Reducido el tamaño del texto */
+    color: green;
+    margin-top: 10px;
+    padding: 5px; /* Reducido el padding */
+}
+
+h2 {
+    color: #444;
+    font-family: "Grandstander", sans-serif;
+    font-size: 18px; /* Reducido el tamaño del texto */
+    margin-bottom: 10px; /* Reducido el margen inferior */
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 15px; /* Reducido el padding */
+    padding-right: 15px; /* Reducido el padding */
+}
+
+p {
+    font-family: "Grandstander", sans-serif;
+    font-size: 20px; /* Reducido el tamaño del texto */
+    color: #666;
+    margin: 10px 0; /* Reducido el margen */
+}
+
+.input-container {
+    position: relative;
+    display: flex; /* Usar flexbox para alinear */
+    align-items: center; /* Centra verticalmente */
+    margin-bottom: 10px; /* Espacio inferior */
+}
+
+.input-container i.fa {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: green;
+    font-size: 18px; /* Reducido el tamaño del ícono */
+}
+
+.input-container i.fa-user {
+    left: 10px; /* Ícono de usuario a la izquierda */
+}
+
+.input-container i.fa-lock {
+    left: 10px; /* Ícono de candado a la izquierda */
+}
+
+/* Para los íconos de mostrar/ocultar contraseña */
+#togglePassword, #togglePasswordConfirm {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px; /* Reducido el tamaño del ícono */
+    color: green;
+    cursor: pointer;
+    right: 10px; /* Ícono del ojo a la derecha */
+}
+
+/* Asegura que el input no se solape con el ícono */
+input[type="password"], input[type="text"], input[type="email"] {
+    width: 100%;
+    padding: 12px 40px; /* Reducido el padding */
+    margin: 8px 0; /* Reducido el margen */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px; /* Reducido el tamaño del texto */
+    font-family: "Grandstander", sans-serif;
+}
+.invalid-feedback {
+    color: red;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px; /* Espaciado entre el campo y el mensaje */
+    font-family: "Grandstander", sans-serif; /* Mantén la coherencia tipográfica */
+}
+
+button.login-button {
+    background-color: #5de061;
+    color: rgb(18, 1, 3);
+    padding: 12px 20px; /* Reducido el padding */
+    margin: 12px 0; /* Reducido el margen */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px; /* Reducido el tamaño del texto */
+    transition: background-color 0.3s;
+    width: 100%;
+    font-family: 'Magic';
+}
+
+button.login-button:hover {
+    background-color: #45a049;
+}
+
+.footer {
+    color: #095800;
+    font-size: 16px; /* Reducido el tamaño del texto */
+    margin-top: 15px; /* Reducido el margen superior */
+    font-family: 'Grandstander', sans-serif;
+}
+
+.footer a {
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.is-invalid {
+    border: 2px solid red;
+}
+
+.char-counter {
+    font-size: 10px; /* Reducido el tamaño del texto */
+    color: #888;
+    font-family: 'Letters', sans-serif;
+}
+.texto-pequeño {
+    font-size: 10px; /* Reducido el tamaño del texto */
+    color: #888;
+    font-family: 'Letters', sans-serif;
+}
+
+.radio-group label {
+    font-family: "Grandstander", sans-serif;
+    font-size: 14px; /* Reducido el tamaño del texto */
+    margin-right: 8px; /* Reducido el margen */
+}
+
+/* Ajustes para el comportamiento responsive */
+@media (max-width: 768px) {
+    .register-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .motivational-container,
+    .container {
+        width: 100%;
+        max-width: 90%;
+    }
+}

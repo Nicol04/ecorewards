@@ -42,7 +42,7 @@
                 
             </form>
 
-            <p class="footer">¿Aún no estás registrado? <a href="#">Crea una cuenta</a></p>
+            <p class="footer">¿Aún no estás registrado? <a href="{{ route('register') }}">Crea una cuenta</a></p>
         </div>
 
         <div class="motivational-container">

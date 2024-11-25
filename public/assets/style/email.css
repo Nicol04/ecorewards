@@ -1,0 +1,216 @@
+body{
+    background-image: url('../img/fondo2.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+}
+
+.container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+.content-container {
+    display: flex;
+    gap: 30px; /* Espaciado entre el formulario y la imagen */
+    width: 100%;
+    align-items: center;
+}
+
+/* Icono centrado */
+.icon-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.icon-container i {
+    font-size: 48px;
+    color: #00d44a; /* Color amarillo */
+}
+
+/* Título */
+h1 {
+    color: #860000; /* Color rojo oscuro */
+    margin-bottom: 20px;
+    font-family: "Grandstander", Arial, sans-serif;
+    font-size: 30px;
+}
+
+/* Texto de recuperación */
+p {
+    font-family: "Grandstander", Arial, sans-serif;
+    font-size: 22px;
+    color: #000000; /* Color anaranjado */
+    margin: 15px 0;
+}
+/* Contenedor del icono de correo */
+.input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+/* Icono de correo dentro del círculo */
+.email-icon-container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: #008c1a; /* Color del círculo */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.email-icon-container i {
+    color: white;
+}
+
+/* Input de correo */
+.form-control {
+    width: 100%;  /* Aseguramos que ocupe todo el ancho disponible */
+    padding: 10px 10px 10px 68px; /* Ajuste para dejar suficiente espacio para el icono */
+    border: 1px solid #088f00; /* Color del borde */
+    border-radius: 5px;
+    font-size: 16px;
+    color: black;
+    box-sizing: border-box;  /* Asegura que el padding no afecte el tamaño total */
+}
+
+
+.form-control:focus {
+    border-color: #860000;
+    outline: none;
+}
+
+/* Botón Enviar enlace */
+.login-button {
+    background-color: #009d0a; /* Color solicitado */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-family: "Magic", Arial, sans-serif;
+    width: 100%; /* Asegura que el botón ocupe todo el ancho */
+}
+
+.login-button:hover {
+    background-color: #00ea62;
+}
+
+/* Mensaje de éxito */
+.alert-success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.invalid-feedback {
+    color: red;
+    font-size: 14px;
+}
+
+.brand-title {
+    text-align: center;
+    color: #09eb1f ; /* Color azul */
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-family: "All the Way to the Sun", Arial, sans-serif;
+}
+
+.image-side {
+    text-align: center;
+    flex: 1; /* Toma espacio proporcional */
+}
+
+.logo-image {
+    width: 400px;
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+.motivational-container {
+    background-color: white;
+    padding: 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    max-width: 400px; /* Aumenta el ancho máximo */
+    margin: 0 auto;
+}
+
+.motivational-image {
+    width: 100%; /* La imagen se ajusta al ancho del contenedor */
+    height: auto; /* Mantiene las proporciones */
+    border-radius: 10px;
+}
+
+/* Lado del formulario */
+.form-side {
+    flex: 1; /* Toma espacio proporcional */
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+/* Botón "Ir a Iniciar Sesión" */
+.inicio-sesion-button {
+    background-color: #ffffff; /* Color blanco */
+    color: #188d00; /* Color de las letras */
+    border: 2px solid #da8e26; /* Borde del botón */
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    margin-top: 15px;
+    font-family: "Magic", Arial, sans-serif;
+}
+
+.inicio-sesion-button:hover {
+    background-color: #f2e7d5;
+}
+
+/* Estilos para el contenedor del logo */
+.brand-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+.brand-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
