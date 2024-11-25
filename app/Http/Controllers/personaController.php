@@ -57,6 +57,9 @@ class personaController extends Controller
 
         Persona::create($validatedData);
 
-        return redirect()->route('personas.index')->with('success', 'Persona creada exitosamente.');
+        return redirect()->route('personas.index')
+        ->with('mensaje', 'Persona creada exitosamente.')
+        ->with('icono', 'success');
     }
+    
 }
