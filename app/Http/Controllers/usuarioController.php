@@ -75,7 +75,9 @@ class usuarioController extends Controller
                 'exception' => $e->getMessage(),
                 'input' => $request->all()
             ]);
-            return redirect()->back()->with('error', 'Hubo un problema al crear el usuario');
+            return redirect()->back()
+            ->with('mensaje', 'Hubo un problema al crear el usuario')
+            ->with('icono','error');
         }
     }
 

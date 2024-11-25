@@ -106,6 +106,8 @@ class materialController extends Controller
         $material->delete();
 
         Log::info('Material deleted successfully', ['id' => $material->idMaterial]);
-        return redirect()->route('materials.index')->with('success', 'Material deleted successfully.');
+        return redirect()->route('materials.index')
+        ->with('mensaje', 'Material eliminado exitosamente.')
+        ->with('icono','success');
     }
 }

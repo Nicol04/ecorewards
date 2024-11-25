@@ -38,7 +38,9 @@ class categoriaController extends Controller
         Categorium::create($validatedData);
 
         // Redirigimos con mensaje de éxito
-        return redirect()->route('categorias.index')->with('success', 'Categoría creada exitosamente');
+        return redirect()->route('categorias.index')
+        ->with('mensaje', 'Categoría creada exitosamente')
+        ->with('icono','success');
     }
 
     public function show(Categorium $categoria)
@@ -63,7 +65,9 @@ class categoriaController extends Controller
         $categorium->update($validatedData);
 
         // Redirigir con mensaje de éxito
-        return redirect()->route('categorias.index')->with('success', 'Categoría actualizada exitosamente');
+        return redirect()->route('categorias.index')
+        ->with('mensaje', 'Categoría actualizada exitosamente')
+        ->with('icono','success');
     }
 
     public function destroy(Categorium $categorium)
@@ -72,6 +76,8 @@ class categoriaController extends Controller
         $categorium->delete();
 
         // Redirigir con mensaje de éxito
-        return redirect()->route('categorias.index')->with('success', 'Categoría eliminada exitosamente');
+        return redirect()->route('categorias.index')
+        ->with('mensaje', 'Categoría eliminada exitosamente')
+        ->with('icono','success');
     }
 }

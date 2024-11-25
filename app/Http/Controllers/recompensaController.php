@@ -90,7 +90,9 @@ class recompensaController extends Controller
         $recompensa = Recompensa::create($request->all());
         Log::info('Recompensa creada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
-        return redirect()->route('recompensas.index')->with('success', 'Recompensa creada correctamente.');
+        return redirect()->route('recompensas.index')
+        ->with('mensaje', 'Recompensa creada correctamente.')
+        ->with('icono','success');
     }
 
     /**
@@ -132,7 +134,9 @@ class recompensaController extends Controller
         $recompensa->update($request->all());
         Log::info('Recompensa actualizada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
-        return redirect()->route('recompensas.index')->with('success', 'Recompensa actualizada correctamente.');
+        return redirect()->route('recompensas.index')
+        ->with('success', 'Recompensa actualizada correctamente.')
+        ->with('icono','success');
     }
 
     /**
@@ -143,6 +147,8 @@ class recompensaController extends Controller
         $recompensa->delete();
         Log::info('Recompensa eliminada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
-        return redirect()->route('recompensas.index')->with('success', 'Recompensa eliminada correctamente.');
+        return redirect()->route('recompensas.index')
+        ->with('mensaje', 'Recompensa eliminada correctamente.')
+        ->with('icono','success');
     }
 }

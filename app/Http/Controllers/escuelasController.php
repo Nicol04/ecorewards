@@ -44,7 +44,9 @@ class escuelasController extends Controller
 
         Escuela::create($validatedData);
 
-        return redirect()->route('escuelas.index')->with('success', 'Escuela creada con éxito.');
+        return redirect()->route('escuelas.index')
+        ->with('mensaje', 'Escuela creada con éxito.')
+        ->with('icono','success');
     }
 
     /**
@@ -86,7 +88,9 @@ class escuelasController extends Controller
 
         $escuela->update($validatedData);
 
-        return redirect()->route('escuelas.index')->with('success', 'Escuela actualizada con éxito.');
+        return redirect()->route('escuelas.index')
+        ->with('mensaje', 'Escuela actualizada con éxito.')
+        ->with('icono','success');
     }
 
     /**
@@ -100,6 +104,8 @@ class escuelasController extends Controller
 
         $escuela->delete();
 
-        return redirect()->route('escuelas.index')->with('success', 'Escuela eliminada con éxito.');
+        return redirect()->route('escuelas.index')
+        ->with('mensaje', 'Escuela eliminada con éxito.')
+        ->with('icono','success');
     }
 }

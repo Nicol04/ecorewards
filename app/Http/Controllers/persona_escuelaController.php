@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Config\responseHttp;
-use App\Models\Persona_escuelaModel;
-use App\Models\PersonaModel;
-use App\Models\UsuarioModel;
+use App\Models\PersonaEscuela;
+use App\Models\Persona;
+use App\Models\Usuario;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +15,7 @@ class persona_escuelaController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $persona_escuela = Persona_escuelaModel::all(); 
+            $persona_escuela = PersonaEscuela::all(); 
             return ResponseHttp::status200($persona_escuela);
         } catch (\Exception $e) {
             return ResponseHttp::status500('Error al listar las entradas en persona_escuela: ' . $e->getMessage());
@@ -42,7 +42,7 @@ class persona_escuelaController extends Controller
         if ($validator->fails()) {
             return responseHttp::status400($validator->errors());
         }
-        $usuario = usuarioModel::where('idpersona', $request->idpersona)->first();
+        $usuario = Usuario::where('idpersona', $request->idpersona)->first();
         if (!$usuario) {
             return responseHttp::status400('El idpersona no tiene un usuario asociado.');
         }
@@ -50,7 +50,7 @@ class persona_escuelaController extends Controller
             return responseHttp::status400('El idpersona no corresponde a un usuario válido (Estudiante, Docente o Director).');
         }
         try {
-            $personaEscuela = Persona_escuelaModel::create([
+            $personaEscuela = PersonaEscuela::create([
                 'idpersona' => $request->idpersona,
                 'idescuela' => $request->idescuela,
                 'grado' => $request->grado,

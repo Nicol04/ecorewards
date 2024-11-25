@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Config\responseHttp;
-use App\Models\canjesModel;
-use App\Models\recompensaModel;
+use App\Models\Canje;
+use App\Models\Recompensa;
 use Illuminate\Support\Facades\Validator;
 use Exception;
 class canjesController extends Controller
 {
     public function index(): JsonResponse
     {
-        $canjes = CanjesModel::all(); 
+        $canjes = Canje::all(); 
         return response()->json(['data' => $canjes], 200);
     }
 
@@ -39,12 +39,12 @@ class canjesController extends Controller
             return responseHttp::status400($validator->errors()->first());
         }
         try {
-            $recompensa = RecompensaModel::find($request->idrecompensa);
+            $recompensa = Recompensa::find($request->idrecompensa);
 
             if ($recompensa->stock <= 0) {
                 return responseHttp::status400('La recompensa seleccionada no tiene stock disponible.');
             }
-            $canje = canjesModel::create($request->only([
+            $canje = Canje::create($request->only([
                 'idusuario',
                 'idrecompensa',
                 'fechaCanje',

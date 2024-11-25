@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\puntosModel;
+use App\Models\Punto;
 use App\Models\usuarioModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ class puntosController extends Controller
 {
     public function index(): JsonResponse
     {
-        $puntos = puntosModel::all(); 
+        $puntos = Punto::all(); 
         return response()->json(['data' => $puntos], 200);
     }
 
@@ -37,7 +37,7 @@ class puntosController extends Controller
         }
 
         try {
-            $puntos = puntosModel::create($request->only([
+            $puntos = Punto::create($request->only([
                 'idusuario', 
                 'totalPuntos', 
                 'puntosUtilizados', 
@@ -64,7 +64,7 @@ class puntosController extends Controller
         }
 
         try {
-            $puntos = puntosModel::findOrFail($id); // Buscar por ID
+            $puntos = Punto::findOrFail($id); // Buscar por ID
             $puntos->update($request->only(['idUsuario', 'totalPuntos', 'puntosUtilizados', 'puntosDisponibles']));
 
             return response()->json(['message' => 'Puntos actualizados satisfactoriamente', 'data' => $puntos], 200);
