@@ -30,6 +30,59 @@
 </div>
 
 <div class="mb-3">
+    <label for="direccionLink" class="form-label">Enlace de Google Maps</label>
+    <input 
+        type="url" 
+        name="direccionLink" 
+        id="direccionLink" 
+        class="form-control @error('direccionLink') is-invalid @enderror" 
+        value="{{ old('direccionLink', $escuela->direccionLink ?? '') }}"
+    >
+    @error('direccionLink')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <label for="direccionUrl" class="form-label">Enlace de Google Maps (Iframe)</label>
+    <input 
+        type="text" 
+        name="direccionUrl" 
+        id="direccionUrl" 
+        class="form-control @error('direccionUrl') is-invalid @enderror" 
+        value="{{ old('direccionUrl', $escuela->direccionUrl ?? '') }}"
+        placeholder="Introduce el enlace del iframe de Google Maps"
+    >
+    @error('direccionUrl')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
+<div class="mb-3">
+    <button type="button" id="loadMap" class="btn btn-primary">Cargar Vista Previa del Mapa</button>
+</div>
+
+<div class="mb-3" id="mapContainer" style="display: none;">
+    <label for="mapPreview" class="form-label">Vista Previa del Mapa</label>
+    <iframe id="mapFrame" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+</div>
+
+<script>
+    document.getElementById('loadMap').addEventListener('click', function () {
+        const mapUrl = document.getElementById('direccionUrl').value;
+        const mapFrame = document.getElementById('mapFrame');
+        const mapContainer = document.getElementById('mapContainer');
+
+        if (mapUrl) {
+            mapFrame.src = mapUrl;
+            mapContainer.style.display = 'block';
+        } else {
+            alert('Por favor, introduce un enlace válido del iframe de Google Maps.');
+        }
+    });
+</script>
+
+<div class="mb-3">
     <label for="telefono" class="form-label">Teléfono</label>
     <input 
         type="text" 
@@ -37,11 +90,15 @@
         id="telefono" 
         class="form-control @error('telefono') is-invalid @enderror" 
         value="{{ old('telefono', $escuela->telefono ?? '') }}"
+        pattern="[0-9]{9}"   
+        maxlength="9"      
+        oninput="this.value=this.value.replace(/[^0-9]/g,'');" 
     >
     @error('telefono')
         <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
+
 
 <div class="mb-3">
     <label for="director" class="form-label">Director</label>

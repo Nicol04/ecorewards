@@ -1,24 +1,6 @@
 <?php
-
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
-
-/**
- * Class Categorium
- * 
- * @property int $idCategoria
- * @property string $nombreCategoria
- * @property string $descripcion
- * 
- * @property Recompensa $recompensa
- *
- * @package App\Models
- */
 class Categorium extends Model
 {
 	protected $table = 'categoria';
@@ -32,7 +14,7 @@ class Categorium extends Model
 
 	public function recompensa()
 	{
-		return $this->hasMany(Recompensa::class, 'idcategoria', 'idRecompensa');
+		return $this->hasMany(Recompensa::class, 'idcategoria', 'idCategoria');
 		
 	}
 }

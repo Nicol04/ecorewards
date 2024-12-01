@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\canje_comentarioController;
 use App\Http\Controllers\categoriaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -19,9 +20,31 @@ Route::get('/static', function () {
     return file_get_contents(public_path('static/index.html'));
 });
 
+Route::get('/sobrenosotros', action: [StaticPageController::class, 'sobrenosotros'])
+->name('public.sobrenosotros');
+
+Route::get('/comofunciona', action: [StaticPageController::class, 'comofunciona'])
+->name('public.comofunciona');
+
+Route::get('/contacto', action: [StaticPageController::class, 'contacto'])
+->name('public.contacto');
+
+Route::get('/escuela', action: [StaticPageController::class, 'escuela'])
+->name('public.escuela');
+
+Route::get('/escuela/{id}', [EscuelasController::class, 'showEscuelas'])
+->name('public.informacion_escuelas');
+
+Route::get('/recompensas', action: [StaticPageController::class, 'recompensas'])
+->name('public.recompensas');
+
+Route::get('/recompensas', [RecompensaController::class, 'showRecompensas'])
+->name('public.recompensas');
+
+
 Auth::routes();
 //Admin
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('hogar');;
 
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
@@ -44,4 +67,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('recompensas', recompensaController::class);
+});
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::resource('canjecomentario', canje_comentarioController::class);
 });

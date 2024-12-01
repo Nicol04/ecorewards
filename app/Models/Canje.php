@@ -1,29 +1,10 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Canje
- * 
- * @property int $idCanje
- * @property int $idusuario
- * @property int $idrecompensa
- * @property Carbon $fechaCanje
- * @property int $puntosUtilizados
- * 
- * @property Recompensa $recompensa
- * @property Usuario $usuario
- * @property CanjeComentario $canje_comentario
- *
- * @package App\Models
- */
 class Canje extends Model
 {
 	protected $table = 'canjes';

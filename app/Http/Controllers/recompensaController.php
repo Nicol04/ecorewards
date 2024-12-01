@@ -59,6 +59,17 @@ class recompensaController extends Controller
         return view('recompensas.index', compact('recompensas', 'categorias'));
     }
 
+    public function showRecompensas()
+    {
+        // Paginar recompensas con 6 elementos por página
+        $recompensas = Recompensa::with('categorium')->paginate(6);
+
+        // Obtener categorías con el conteo de recompensas asociadas (opcional)
+        $categorias = Categorium::withCount('recompensa')->get();
+
+        return view('static.recompensas', compact('recompensas', 'categorias'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -71,14 +82,14 @@ class recompensaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /*public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'nombreRecompensa' => 'required|string|max:255',
             'descripcion' => 'required|string',
             'puntosRequeridos' => 'required|integer|min:0',
             'stock' => 'required|integer|min:0',
-            'imagen' => 'nullable|string|max:255',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'idcategoria' => 'required|integer|exists:categoria,idcategoria',
         ]);
 
@@ -93,7 +104,68 @@ class recompensaController extends Controller
         return redirect()->route('recompensas.index')
         ->with('mensaje', 'Recompensa creada correctamente.')
         ->with('icono','success');
+    } */
+
+    public function store(Request $request)
+    {
+        // Validación de los datos, incluyendo la imagen
+        $validator = Validator::make($request->all(), [
+            'nombreRecompensa' => 'required|string|max:255',
+            'descripcion' => 'required|string',
+            'puntosRequeridos' => 'required|integer|min:0',
+            'stock' => 'required|integer|min:0',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validación de la imagen
+            'idcategoria' => 'required|integer|exists:categoria,idCategoria',
+        ], [
+            'nombreRecompensa.required' => 'El nombre de la recompensa es obligatorio.',
+            'descripcion.required' => 'La descripción es obligatoria.',
+            'puntosRequeridos.required' => 'El valor en puntos es obligatorio.',
+            'stock.required' => 'El stock es obligatorio.',
+            'imagen.image' => 'El archivo debe ser una imagen.',
+            'imagen.mimes' => 'La imagen debe ser de tipo jpeg, png, jpg o gif.',
+            'imagen.max' => 'La imagen no debe superar los 2MB.',
+            'idcategoria.required' => 'La categoría es obligatoria.',
+        ]);
+
+        // Si la validación falla, redirige con errores
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Manejo de la imagen
+        $rutaImagen = '';
+        if ($request->hasFile('imagen')) {
+            // Comprobamos el tipo MIME
+            $mimeType = $request->file('imagen')->getMimeType();
+            Log::info('Tipo MIME del archivo: ' . $mimeType); // Log para depuración
+
+            // Almacenar la imagen si el MIME es correcto
+            if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/gif'])) {
+                // Usamos la función store() para guardar la imagen en el directorio público
+                $rutaImagen = $request->file('imagen')->store('fotos', 'public');
+            } else {
+                Log::error('El archivo no es una imagen válida: ' . $mimeType);
+                return redirect()->back()->withErrors(['imagen' => 'La imagen debe ser de tipo jpeg, png, jpg o gif.'])->withInput();
+            }
+        }
+
+        // Crear la recompensa
+        Recompensa::create([
+            'nombreRecompensa' => $request->nombreRecompensa,
+            'descripcion' => $request->descripcion,
+            'puntosRequeridos' => $request->puntosRequeridos,
+            'stock' => $request->stock,
+            'imagen' => $rutaImagen, // Guarda la ruta de la imagen
+            'idcategoria' => $request->idcategoria,
+        ]);
+
+        return redirect()->route('recompensas.index')
+            ->with('mensaje', 'Recompensa creada correctamente.')
+            ->with('icono', 'success');
     }
+
+
+
 
     /**
      * Display the specified resource.
@@ -135,8 +207,8 @@ class recompensaController extends Controller
         Log::info('Recompensa actualizada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
         return redirect()->route('recompensas.index')
-        ->with('success', 'Recompensa actualizada correctamente.')
-        ->with('icono','success');
+            ->with('success', 'Recompensa actualizada correctamente.')
+            ->with('icono', 'success');
     }
 
     /**
@@ -148,7 +220,7 @@ class recompensaController extends Controller
         Log::info('Recompensa eliminada exitosamente.', ['idRecompensa' => $recompensa->idRecompensa]);
 
         return redirect()->route('recompensas.index')
-        ->with('mensaje', 'Recompensa eliminada correctamente.')
-        ->with('icono','success');
+            ->with('mensaje', 'Recompensa eliminada correctamente.')
+            ->with('icono', 'success');
     }
 }

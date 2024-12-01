@@ -3,9 +3,19 @@
 
 @section('content')
 <div class="container">
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <h1>Crear Recompensa</h1>
 
-    <form method="POST" action="{{ route('recompensas.store') }}">
+    <form action="{{ route('recompensas.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @include('recompensas.form')
         <button type="submit" class="btn btn-success">Guardar</button>

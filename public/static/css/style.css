@@ -56,6 +56,7 @@ body {
   color: #656565;
   text-align: left;
   background-color: #F3F3F3;
+  overflow: visible;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -9764,13 +9765,17 @@ h6,
 }
 
 .boton-imagen {
+  display: inline-block;
   width: 40px;
   height: 40px;
-  transition: all 0.3s ease; 
+  background-image: url("{{ asset('static/img/recompensas.png') }}");
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.3s ease;
 }
 
-.nav-item:hover .boton-imagen {
-  content: url('/img/recompensasVerde.png'); 
+.boton-imagen:hover {
+  background-image: url("{{ asset('static/img/recompensasVerde.png') }}");
 }
 
 /* Variables de CSS para Paleta de Colores */

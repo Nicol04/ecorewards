@@ -1,28 +1,9 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-
-/**
- * Class Escuela
- * 
- * @property int $idEscuela
- * @property string $nombreEscuela
- * @property string|null $direccion
- * @property string|null $telefono
- * @property string|null $director
- * @property string $logoEscuela
- * 
- * @property Collection|Persona[] $personas
- *
- * @package App\Models
- */
 class Escuela extends Model
 {
 	protected $table = 'escuelas';
@@ -32,6 +13,8 @@ class Escuela extends Model
 	protected $fillable = [
 		'nombreEscuela',
 		'direccion',
+		'direccionLink',
+		'direccionUrl',
 		'telefono',
 		'director',
 		'logoEscuela'

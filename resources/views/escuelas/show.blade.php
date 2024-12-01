@@ -6,6 +6,17 @@
         <div class="card-body">
             <h5 class="card-title">{{ $escuela->nombreEscuela }}</h5>
             <p class="card-text"><strong>Dirección:</strong> {{ $escuela->direccion ?? 'No especificada' }}</p>
+            <div>
+    <h4>Dirección:</h4>
+    <p>{{ $escuela->direccion }}</p>
+
+    @if($escuela->direccionLink)
+        <a href="{{ $escuela->direccionLink }}" target="_blank" class="btn btn-info">
+            Ver en Google Maps
+        </a>
+    @endif
+</div>
+
             <p class="card-text"><strong>Teléfono:</strong> {{ $escuela->telefono ?? 'No especificado' }}</p>
             <p class="card-text"><strong>Director:</strong> {{ $escuela->director ?? 'No especificado' }}</p>
             <p class="card-text"><strong>Logo:</strong></p>

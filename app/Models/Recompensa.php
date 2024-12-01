@@ -1,30 +1,9 @@
 <?php
-
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Recompensa
- * 
- * @property int $idRecompensa
- * @property string $nombreRecompensa
- * @property string $descripcion
- * @property int $puntosRequeridos
- * @property int $stock
- * @property string $imagen
- * @property int $idcategoria
- * 
- * @property Categorium $categorium
- * @property Collection|Canje[] $canjes
- *
- * @package App\Models
- */
 class Recompensa extends Model
 {
 	protected $table = 'recompensa';
@@ -49,9 +28,9 @@ class Recompensa extends Model
 	];
 
 	public function categorium()
-	{
-		return $this->belongsTo(Categorium::class, 'idcategoria');
-	}
+{
+    return $this->belongsTo(Categorium::class, 'idcategoria', 'idCategoria');
+}
 
 	public function canjes()
 	{
