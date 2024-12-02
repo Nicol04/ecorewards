@@ -26,10 +26,12 @@
         <div class="text-center mb-4">
     <img class="img-fluid" src="{{ asset('storage/' . $escuela->logoEscuela) }}" alt="Logo de {{ $escuela->nombreEscuela }}" style="max-width: 300px; height: auto;">
 </div>
-            <div class="blog-date">
-                <h6 class="font-weight-bold mb-n1">{{ \Carbon\Carbon::now()->format('d') }}</h6>
-                <small class="text-white text-uppercase">{{ \Carbon\Carbon::now()->format('M') }}</small>
-            </div>
+<div class="blog-date">
+    <a href="{{ route('public.escuela') }}" class="btn btn-primary d-flex align-items-center">
+        <i class="fa fa-arrow-left mr-2"></i>
+    </a>
+</div>
+
         </div>
     </div>
     <div class="bg-white mb-3" style="padding: 30px;">

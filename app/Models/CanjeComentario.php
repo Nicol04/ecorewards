@@ -26,6 +26,6 @@ class CanjeComentario extends Model
 
 	public function canje()
 	{
-		return $this->belongsTo(Canje::class, 'idcanje');
+		return $this->belongsTo(Canje::class, 'idcanje', 'idCanje');
 	}
 }

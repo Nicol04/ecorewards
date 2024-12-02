@@ -9,7 +9,6 @@ use App\Http\Controllers\escuelasController;
 use App\Http\Controllers\materialController;
 use App\Http\Controllers\recompensaController;
 use App\Http\Controllers\usuarioController;
-
 // routes/web.php
 
 Route::get('/', function () {
@@ -44,6 +43,9 @@ Route::get('/recompensas', [RecompensaController::class, 'showRecompensas'])
 Route::get('/perfil', [StaticPageController::class, 'perfil'])
 ->name('public.perfil')->middleware('auth');
 
+Route::get('/historial_canjes', [StaticPageController::class, 'historial_canjes'])
+->name('public.historial_canjes')->middleware('auth');
+
 Route::get('/canjes', [StaticPageController::class, 'canjes'])
 ->name('public.canjes')->middleware('auth');
 
@@ -52,6 +54,11 @@ Route::get('/puntos', [StaticPageController::class, 'puntos'])
 
 Route::get('/reciclaje', [StaticPageController::class, 'reciclaje'])
 ->name('public.reciclaje')->middleware('auth');
+
+Route::get('/informacion_recompensas/{id}', [StaticPageController::class, 'informacion_recompensas'])
+->name('public.informacion_recompensas')->middleware('auth');
+
+Route::post('/comentarios/store', [canje_comentarioController::class, 'store'])->name('canje_comentario.store');
 
 Auth::routes();
 //Admin
