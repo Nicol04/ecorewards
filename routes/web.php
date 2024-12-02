@@ -41,6 +41,17 @@ Route::get('/recompensas', action: [StaticPageController::class, 'recompensas'])
 Route::get('/recompensas', [RecompensaController::class, 'showRecompensas'])
 ->name('public.recompensas');
 
+Route::get('/perfil', [StaticPageController::class, 'perfil'])
+->name('public.perfil')->middleware('auth');
+
+Route::get('/canjes', [StaticPageController::class, 'canjes'])
+->name('public.canjes')->middleware('auth');
+
+Route::get('/puntos', [StaticPageController::class, 'puntos'])
+->name('public.puntos')->middleware('auth');
+
+Route::get('/reciclaje', [StaticPageController::class, 'reciclaje'])
+->name('public.reciclaje')->middleware('auth');
 
 Auth::routes();
 //Admin

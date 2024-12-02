@@ -36,7 +36,10 @@
                         {{ $usuario->nombreUsuario }}
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Perfil</a>
+                        <a class="dropdown-item" href="{{ route('public.perfil') }}"><i class="bi bi-person-fill"></i> Perfil</a>
+                        <a class="dropdown-item" href="{{ route('public.canjes') }}"><i class="fa fa-exchange-alt"></i> Canjes</a>
+                        <a class="dropdown-item" href="{{ route('public.puntos') }}"><i class="fa fa-star"></i> Puntos</a>
+                        <a class="dropdown-item" href="{{ route('public.reciclaje') }}"><i class="fa fa-recycle"></i> Reciclaje</a>
                         <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
                         </a>

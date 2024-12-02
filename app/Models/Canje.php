@@ -27,16 +27,16 @@ class Canje extends Model
 
 	public function recompensa()
 	{
-		return $this->belongsTo(Recompensa::class, 'idrecompensa');
+		return $this->belongsTo(Recompensa::class, 'idrecompensa','idRecompensa');
 	}
 
 	public function usuario()
 	{
-		return $this->belongsTo(Usuario::class, 'idusuario');
+		return $this->belongsTo(Usuario::class, 'idusuario','idUsuario');
 	}
 
 	public function canje_comentario()
 	{
-		return $this->hasOne(CanjeComentario::class, 'idcanje');
+		return $this->hasOne(CanjeComentario::class, 'idcanje','idCanje');
 	}
 }

@@ -40,21 +40,21 @@ class Usuario  extends Authenticatable
 
 	public function canjes()
 	{
-		return $this->hasMany(Canje::class, 'idusuario');
+		return $this->hasMany(Canje::class, 'idusuario','idUsuario');
 	}
 
 	public function persona()
 	{
-		return $this->hasOne(Persona::class, 'idusuario');
+		return $this->hasOne(Persona::class, 'idusuario', 'idUsuario');
 	}
 
 	public function punto()
 	{
-		return $this->hasOne(Punto::class, 'idusuario');
+		return $this->hasOne(Punto::class, 'idusuario', 'idUsuario');
 	}
 
 	public function reciclaje()
 	{
-		return $this->hasOne(Reciclaje::class, 'idusuario');
+		return $this->hasOne(Reciclaje::class, 'idusuario', 'idUsuario');
 	}
 }

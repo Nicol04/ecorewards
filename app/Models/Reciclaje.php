@@ -1,29 +1,10 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class Reciclaje
- * 
- * @property int $idReciclaje
- * @property int $idusuario
- * @property Carbon $fechaReciclaje
- * @property int $idmaterial
- * @property float $cantidad
- * @property int $puntosObtenidos
- * 
- * @property Material $material
- * @property Usuario $usuario
- *
- * @package App\Models
- */
 class Reciclaje extends Model
 {
 	protected $table = 'reciclaje';
@@ -48,11 +29,11 @@ class Reciclaje extends Model
 
 	public function material()
 	{
-		return $this->belongsTo(Material::class, 'idmaterial');
+		return $this->belongsTo(Material::class, 'idmaterial', 'idMaterial');
 	}
 
 	public function usuario()
 	{
-		return $this->belongsTo(Usuario::class, 'idusuario');
+		return $this->belongsTo(Usuario::class, 'idusuario', 'idUsuario');
 	}
 }

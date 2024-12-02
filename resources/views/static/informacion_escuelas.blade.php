@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<body>
+<div>
     <!-- Header Start -->
     <div class="container-fluid page-header">
         <div class="container">

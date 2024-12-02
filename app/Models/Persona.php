@@ -1,33 +1,10 @@
 <?php
 
-/**
- * Created by Reliese Model.
- */
-
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-
-/**
- * Class Persona
- * 
- * @property int $idPersona
- * @property int $idusuario
- * @property string $nombre
- * @property string $apellido
- * @property Carbon $fechaNacimiento
- * @property string $direccion
- * @property string $telefono
- * @property string $genero
- * @property string $foto
- * 
- * @property Usuario $usuario
- * @property Collection|Escuela[] $escuelas
- *
- * @package App\Models
- */
 class Persona extends Model
 {
 	protected $table = 'persona';
@@ -52,7 +29,7 @@ class Persona extends Model
 
 	public function usuario()
 	{
-		return $this->belongsTo(Usuario::class, 'idusuario');
+		return $this->belongsTo(Usuario::class, 'idusuario', 'idUsuario');
 	}
 
 	public function escuelas()

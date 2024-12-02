@@ -59,16 +59,27 @@ class recompensaController extends Controller
         return view('recompensas.index', compact('recompensas', 'categorias'));
     }
 
-    public function showRecompensas()
-    {
-        // Paginar recompensas con 6 elementos por página
+    public function showRecompensas(Request $request)
+{
+    // Obtener el ID de la categoría desde los parámetros de la URL
+    $categoriaId = $request->query('categoria');
+
+    // Si hay un ID de categoría, filtrar las recompensas por esa categoría
+    if ($categoriaId) {
+        $recompensas = Recompensa::where('idcategoria', $categoriaId)
+            ->with('categorium')
+            ->paginate(6);
+    } else {
+        // Caso contrario, mostrar todas las recompensas
         $recompensas = Recompensa::with('categorium')->paginate(6);
-
-        // Obtener categorías con el conteo de recompensas asociadas (opcional)
-        $categorias = Categorium::withCount('recompensa')->get();
-
-        return view('static.recompensas', compact('recompensas', 'categorias'));
     }
+
+    // Obtener todas las categorías con el conteo de recompensas asociadas
+    $categorias = Categorium::withCount('recompensa')->get();
+
+    return view('static.recompensas', compact('recompensas', 'categorias', 'categoriaId'));
+}
+
 
     /**
      * Show the form for creating a new resource.

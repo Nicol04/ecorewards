@@ -51,36 +51,40 @@
                 </div>
                 <!-- Paginación -->
                 <div class="col-12">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
-                            @if ($recompensas->onFirstPage())
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
-                            </li>
-                            @else
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $recompensas->previousPageUrl() }}">&laquo;</a>
-                            </li>
-                            @endif
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-lg justify-content-center bg-white mb-0" style="padding: 30px;">
+            <!-- Página anterior -->
+            @if ($recompensas->onFirstPage())
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&laquo;</a>
+            </li>
+            @else
+            <li class="page-item">
+                <a class="page-link" href="{{ $recompensas->appends(['categoria' => request('categoria')])->previousPageUrl() }}">&laquo;</a>
+            </li>
+            @endif
 
-                            @foreach ($recompensas->getUrlRange(1, $recompensas->lastPage()) as $page => $url)
-                            <li class="page-item {{ $page == $recompensas->currentPage() ? 'active' : '' }}">
-                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
-                            </li>
-                            @endforeach
+            <!-- Páginas intermedias -->
+            @foreach ($recompensas->getUrlRange(1, $recompensas->lastPage()) as $page => $url)
+            <li class="page-item {{ $page == $recompensas->currentPage() ? 'active' : '' }}">
+                <a class="page-link" href="{{ $url }}{{ request('categoria') ? '&categoria=' . request('categoria') : '' }}">{{ $page }}</a>
+            </li>
+            @endforeach
 
-                            @if ($recompensas->hasMorePages())
-                            <li class="page-item">
-                                <a class="page-link" href="{{ $recompensas->nextPageUrl() }}">&raquo;</a>
-                            </li>
-                            @else
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
-                            </li>
-                            @endif
-                        </ul>
-                    </nav>
-                </div>
+            <!-- Página siguiente -->
+            @if ($recompensas->hasMorePages())
+            <li class="page-item">
+                <a class="page-link" href="{{ $recompensas->appends(['categoria' => request('categoria')])->nextPageUrl() }}">&raquo;</a>
+            </li>
+            @else
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">&raquo;</a>
+            </li>
+            @endif
+        </ul>
+    </nav>
+</div>
+
             </div>
 
             <!-- Columna Derecha -->
@@ -106,21 +110,24 @@
                 </div>
 
                 <!-- Lista de Categorías -->
-                <div class="mb-5">
-                    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Categorías</h4>
-                    <div class="bg-white" style="padding: 30px;">
-                        <ul class="list-inline m-0">
-                            @foreach($categorias as $categoria)
-                            <li class="mb-3 d-flex justify-content-between align-items-center">
-                                <a class="text-dark" href="#">
-                                    <i class="fa fa-angle-right text-primary mr-2"></i>{{ $categoria->nombreCategoria }}
-                                </a>
-                                <span class="badge badge-primary badge-pill">{{ $categoria->recompensa_count }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
+<div class="mb-5">
+    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Categorías</h4>
+    <div class="bg-white" style="padding: 30px;">
+        <ul class="list-inline m-0">
+            @foreach($categorias as $categoria)
+            <li class="mb-3 d-flex justify-content-between align-items-center">
+                <a class="text-dark" 
+                   href="{{ route('public.recompensas', ['categoria' => $categoria->idCategoria]) }}"
+                   class="{{ isset($categoriaId) && $categoriaId == $categoria->idCategoria ? 'font-weight-bold' : '' }}">
+                    <i class="fa fa-angle-right text-primary mr-2"></i>{{ $categoria->nombreCategoria }}
+                </a>
+                <span class="badge badge-primary badge-pill">{{ $categoria->recompensa_count }}</span>
+            </li>
+            @endforeach
+        </ul>
+    </div>
+</div>
+
                 <!-- Recent Post -->
                 <div class="mb-5">
                         <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Canjes recientes:</h4>

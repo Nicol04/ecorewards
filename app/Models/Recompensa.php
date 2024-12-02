@@ -34,6 +34,6 @@ class Recompensa extends Model
 
 	public function canjes()
 	{
-		return $this->hasMany(Canje::class, 'idrecompensa');
+		return $this->hasMany(Canje::class, 'idrecompensa','idRecompensa');
 	}
 }
