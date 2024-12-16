@@ -40,49 +40,56 @@
     <i class="fa fa-exchange-alt"></i> Recompensas canjeadas
 </h1>
 
-
         <!-- Comprobar si no hay canjes -->
-        @if($canjes->isEmpty())
-        <div class="alert alert-info">
-            <p>¡Aún no has realizado ningún canje! Puedes canjear diferentes recompensas, todo depende de qué tanto recicles.</p>
-        </div>
-        @else
-        <div class="row">
-            @foreach($canjes as $canje)
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="package-item bg-white mb-2">
-                    <!-- Imagen de la recompensa -->
-                    @if (!empty($canje->recompensa->imagen))
-                    <img class="img-fluid w-100" src="{{ asset('storage/' . $canje->recompensa->imagen) }}" alt="Imagen de recompensa" style="height: 250px; object-fit: contain; background-color: #f8f9fa; border-radius: 8px;">
-                    @else
-                    <img class="img-fluid w-100" src="img/recompensas/imagen_default.jpg" alt="Imagen por defecto" style="height: 250px; object-fit: contain; background-color: #f8f9fa; border-radius: 8px;">
-                    @endif
+@if($canjes->isEmpty())
+<div class="alert alert-info">
+    <p>¡Aún no has realizado ningún canje! Puedes canjear diferentes recompensas, todo depende de qué tanto recicles.</p>
+</div>
+@else
+<div class="row">
+@foreach($canjes as $canje)
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="package-item bg-white mb-2">
+            <!-- Imagen de la recompensa -->
+            @if (!empty($canje->recompensa->imagen))
+                <img class="img-fluid w-100" src="{{ asset('storage/' . $canje->recompensa->imagen) }}" alt="Imagen de recompensa" style="height: 250px; object-fit: contain; background-color: #f8f9fa; border-radius: 8px;">
+            @else
+                <img class="img-fluid w-100" src="img/recompensas/imagen_default.jpg" alt="Imagen por defecto" style="height: 250px; object-fit: contain; background-color: #f8f9fa; border-radius: 8px;">
+            @endif
 
-                    <div class="p-4">
-                        <div class="d-flex justify-content-between mb-3">
-                            <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>{{ $canje->usuario->nombreUsuario }}</small>
-                            <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ $canje->fechaCanje->format('d-m-Y') }}</small>
-                            <small class="m-0"><i class="fa fa-cogs text-primary mr-2"></i>{{ $canje->recompensa->categoria }}</small>
-                        </div>
-                        <!-- Nombre de la recompensa -->
-                        <a class="h5 text-decoration-none" href="{{ route('public.informacion_recompensas', $canje->recompensa->idRecompensa) }}">{{ $canje->recompensa->nombreRecompensa }}</a>
-                        <div class="border-top mt-4 pt-4">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>{{ $canje->puntuacion ?? 'Sin Puntuación' }} <small>({{ $canje->totalOpiniones ?? '0' }})</small></h6>
-                                <h5 class="m-0">{{ $canje->puntosUtilizados }} Puntos</h5>
-                            </div>
-                        </div>
+            <div class="p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <small class="m-0"><i class="fa fa-user text-primary mr-2"></i>{{ $canje->usuario->nombreUsuario }}</small>
+                    <small class="m-0"><i class="fa fa-calendar-alt text-primary mr-2"></i>{{ $canje->fechaCanje->format('d-m-Y') }}</small>
+                    <small class="m-0"><i class="fa fa-cogs text-primary mr-2"></i>{{ $canje->recompensa->categoria }}</small>
+                </div>
+                <!-- Nombre de la recompensa -->
+                <a class="h5 text-decoration-none" href="{{ route('public.informacion_recompensas', $canje->recompensa->idRecompensa) }}">{{ $canje->recompensa->nombreRecompensa }}</a>
+                <div class="border-top mt-4 pt-4">
+                    <div class="d-flex justify-content-between">
+                    <h6 class="m-0">
+    <i class="fa fa-star text-primary mr-2"></i>
+    @php
+        $promedio = round($canje->promedio_puntuacion); // Redondear la puntuación
+    @endphp
+    <!-- Mostrar la puntuación numérica y /5 -->
+    <span class="text-warning">{{ $promedio }}/5 puntos</span>
+</h6>
+<h5 class="m-0">{{ $canje->puntosUtilizados }} Puntos</h5>
+
                     </div>
                 </div>
             </div>
-            @endforeach
         </div>
-        @endif
     </div>
+@endforeach
+
+</div>
+@endif
+
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
-
 </div>
 <style>
     /* Estilo inicial del botón */

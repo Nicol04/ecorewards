@@ -15,12 +15,12 @@
         </div>
         <!-- Opción: Puntos -->
         <div class="sidebar-item d-flex flex-column align-items-center text-white py-3 px-2" style="cursor: pointer;" title="Puntos">
-            <i class="fa fa-star" style="color: #ffffff; font-size: 1.5rem; transition: transform 0.3s;"></i>
+            <a href="{{ route('public.puntos') }}"><i class="fa fa-star" style="color: #ffffff; font-size: 1.5rem; transition: transform 0.3s;"></i></a>
             <span class="sidebar-text mt-2">Puntos</span>
         </div>
         <!-- Opción: Recompensas -->
         <div class="sidebar-item d-flex flex-column align-items-center text-white py-3 px-2" style="cursor: pointer;" title="Recompensas">
-            <i class="fa fa-gift" style="color: #7ab730; font-size: 1.5rem; transition: transform 0.3s;"></i>
+            <a href="{{ route('public.historial_canjes') }}"><i class="fa fa-gift" style="color: #7ab730; font-size: 1.5rem; transition: transform 0.3s;"></i></a>
             <span class="sidebar-text mt-2">Recompensas</span>
         </div>
         <!-- Opción: Reciclaje -->
@@ -55,7 +55,7 @@
                     <p style="font-size: 1.2rem;">
                         <i class="fa fa-coins" style="color: #ffc107; font-size: 1.5rem;"></i> 
                         Puntos utilizados: <strong>{{ $puntos ? $puntos->puntosUtilizados : 0 }}</strong>
-                        <button class="btn btn-outline-primary btn-sm ml-2">Ver detalles</button>
+                        <a href="{{ route('public.reciclaje') }}"><button class="btn btn-outline-primary btn-sm ml-2"> Ver detalles</button></a>
                     </p>
 
                     <!-- Botones Ganar y Canjear -->

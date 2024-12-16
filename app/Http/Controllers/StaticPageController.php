@@ -65,14 +65,34 @@ class StaticPageController extends Controller
     // Pasa los datos a la vista
     return view('static.perfil', compact('usuario', 'persona'));
 }
-    public function historial_canjes()
-    {
-        // Obtener los canjes con las relaciones necesarias
-        $canjes = Canje::with(['recompensa', 'usuario'])->get();
+public function historial_canjes()
+{
+    // Obtener el usuario autenticado
+    $usuario = Auth::user();
 
-        // Pasar los canjes a la vista
-        return view('static.historial_canjes', compact('canjes'));
+    // Obtener los canjes del usuario autenticado, con las relaciones necesarias
+    $canjes = Canje::where('idusuario', $usuario->idUsuario)
+                    ->with(['recompensa', 'usuario', 'canje_comentario'])  // Incluir comentarios de los canjes
+                    ->get();
+
+    // Calcular el promedio de puntuación y el total de comentarios para cada canje
+    foreach ($canjes as $canje) {
+        // Calcular el total de comentarios
+        $totalComentarios = $canje->canje_comentario->count();
+
+        // Calcular el promedio de puntuación (si existen comentarios)
+        $promedioPuntuacion = $canje->canje_comentario->avg('puntuacion');
+
+        // Asignar los valores calculados a los canjes
+        $canje->total_comentarios = $totalComentarios;
+        $canje->promedio_puntuacion = $promedioPuntuacion ?? 0;  // Si no hay puntuaciones, asignar 0
     }
+
+    // Pasar los canjes a la vista
+    return view('static.historial_canjes', compact('canjes'));
+}
+
+
 
     public function canjes(Request $request)
     {
@@ -140,26 +160,34 @@ private function calcularNivel($totalPuntos)
         // Retorna la vista con los datos
         return view('static.reciclaje', compact('reciclajes'));
     }
-
     public function informacion_recompensas($id)
-{
-    // Obtener la recompensa y sus relaciones
-    $recompensa = Recompensa::with([
-        'categorium', 
-        'canjes.canje_comentario.canje.usuario'
-    ])->findOrFail($id);
+    {
+        // Obtener la recompensa con la categoría
+        $recompensa = Recompensa::with([
+            'categorium'
+        ])->findOrFail($id);
 
-    // Obtener el usuario autenticado
-    $usuario = Auth::user();
+        // Obtener los comentarios de los canjes de la recompensa
+        $comentarios = CanjeComentario::whereHas('canje', function ($query) use ($id) {
+            $query->where('idrecompensa', $id); // Relación con la recompensa
+        })
+        ->with(['canje.usuario']) // Mostrar detalles de usuario
+        ->paginate(10);
 
-    // Verificar si el usuario actual ha canjeado esta recompensa
-    $canjeUsuario = $recompensa->canjes->firstWhere('idusuario', $usuario->idUsuario);
-    $haCanjeado = !is_null($canjeUsuario);
+        // Obtener el usuario actual y verificar si ya canjeó la recompensa
+        $usuario = Auth::user();
+        // Obtener los puntos del usuario
+        $usuarioPuntos = Punto::where('idusuario', $usuario->idUsuario)->first();
+        $canjeUsuario = $recompensa->canjes->firstWhere('idusuario', $usuario->idUsuario);
+        $haCanjeado = !is_null($canjeUsuario);
+        $idcanje = $haCanjeado ? $canjeUsuario->idCanje : null;
 
-    // Pasar el ID del canje (si existe) a la vista
-    $idcanje = $haCanjeado ? $canjeUsuario->idCanje : null;
+        // Contar los comentarios por recompensa
+        $cantidadComentarios = CanjeComentario::whereHas('canje', function ($query) use ($id) {
+            $query->where('idrecompensa', $id);
+        })->count();
 
-    return view('static.informacion_recompensas', compact('recompensa', 'haCanjeado', 'usuario', 'idcanje'));
-}
+        return view('static.informacion_recompensas', compact('recompensa', 'comentarios', 'haCanjeado', 'usuario', 'idcanje', 'usuarioPuntos', 'cantidadComentarios'));
+    }
 
 }

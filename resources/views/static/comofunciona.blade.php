@@ -115,9 +115,10 @@
                             </div>
                         </section>
                         <video class="video-custom" controls>
-                            <source src="img/ecorewards.mp4"  type="video/mp4">
-                            Tu navegador no soporta la reproducción de videos.
-                          </video>
+    <source src="{{ asset('assets/img/ecorewards.mp4') }}" type="video/mp4">
+    Tu navegador no soporta la reproducción de videos.
+</video>
+
                     </div>
                 </div>
             </div>

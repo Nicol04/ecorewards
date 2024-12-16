@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CanjeComentario;
 use App\Models\Categorium;
 use App\Models\Recompensa;
 use Illuminate\Http\Request;
@@ -60,25 +61,29 @@ class recompensaController extends Controller
     }
 
     public function showRecompensas(Request $request)
-{
-    // Obtener el ID de la categoría desde los parámetros de la URL
-    $categoriaId = $request->query('categoria');
+    {
+        // Obtener el ID de la categoría desde los parámetros de la URL
+        $categoriaId = $request->query('categoria');
 
-    // Si hay un ID de categoría, filtrar las recompensas por esa categoría
-    if ($categoriaId) {
-        $recompensas = Recompensa::where('idcategoria', $categoriaId)
-            ->with('categorium')
-            ->paginate(6);
-    } else {
-        // Caso contrario, mostrar todas las recompensas
-        $recompensas = Recompensa::with('categorium')->paginate(6);
+        // Si hay un ID de categoría, filtrar las recompensas por esa categoría
+        if ($categoriaId) {
+            $recompensas = Recompensa::where('idcategoria', $categoriaId)
+                ->with('categorium')
+                ->paginate(6);
+        } else {
+            // Caso contrario, mostrar todas las recompensas
+            $recompensas = Recompensa::with('categorium')->paginate(6);
+        }
+
+        // Obtener todas las categorías con el conteo de recompensas asociadas
+        $categorias = Categorium::withCount('recompensa')->get();
+        $canjesRecientes = CanjeComentario::with(['canje.usuario', 'canje.recompensa'])
+        ->latest('fechaComentario') // Ordenar por fecha del comentario
+        ->take(3) // Limitar a los últimos 3
+        ->get();
+
+        return view('static.recompensas', compact('recompensas', 'categorias', 'categoriaId', 'canjesRecientes'));
     }
-
-    // Obtener todas las categorías con el conteo de recompensas asociadas
-    $categorias = Categorium::withCount('recompensa')->get();
-
-    return view('static.recompensas', compact('recompensas', 'categorias', 'categoriaId'));
-}
 
 
     /**

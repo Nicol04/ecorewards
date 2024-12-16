@@ -24,7 +24,7 @@
 
         <!-- Opción: Recompensas -->
         <div class="sidebar-item d-flex flex-column align-items-center text-white py-3 px-2" style="cursor: pointer;" title="Recompensas">
-            <i class="fa fa-gift" style="color: #7ab730; font-size: 1.5rem; transition: transform 0.3s;"></i>
+            <a href="{{ route('public.historial_canjes') }}"><i class="fa fa-gift" style="color: #7ab730; font-size: 1.5rem; transition: transform 0.3s;"></i></a>
             <span class="sidebar-text mt-2">Recompensas</span>
         </div>
 

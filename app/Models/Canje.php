@@ -37,6 +37,6 @@ class Canje extends Model
 
 	public function canje_comentario()
 	{
-		return $this->hasOne(CanjeComentario::class, 'idcanje','idCanje');
+		return $this->hasMany(CanjeComentario::class, 'idcanje','idCanje');
 	}
 }

@@ -15,12 +15,12 @@
             <div class="col-lg-3 col-md-6 mb-5">
                 <h5 class="text-white text-uppercase mb-4" style="letter-spacing: 5px;">Nuestros servicios</h5>
                 <div class="d-flex flex-column justify-content-start">
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Sobre Nosotros</a>
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Cómo Funciona</a>
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Recompensas</a>
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Escuela</a>
-                    <a class="text-white-50 mb-2" href="#"><i class="fa fa-angle-right mr-2"></i>Estaciones de reciclaje</a>
+                    <a class="text-white-50 mb-2" href="{{ route('hogar') }}"><i class="fa fa-angle-right mr-2"></i>Inicio</a>
+                    <a class="text-white-50 mb-2" href="{{ route('public.sobrenosotros') }}"><i class="fa fa-angle-right mr-2"></i>Sobre Nosotros</a>
+                    <a class="text-white-50 mb-2" href="{{ route('public.comofunciona') }}"><i class="fa fa-angle-right mr-2"></i>Cómo Funciona</a>
+                    <a class="text-white-50 mb-2" href="{{ route('public.recompensas') }}"><i class="fa fa-angle-right mr-2"></i>Recompensas</a>
+                    <a class="text-white-50 mb-2" href="{{ route('public.escuela') }}"><i class="fa fa-angle-right mr-2"></i>Escuela</a>
+                    <a class="text-white-50 mb-2" href="{{ route('public.contacto') }}"><i class="fa fa-angle-right mr-2"></i>Contáctanos</a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 mb-5">

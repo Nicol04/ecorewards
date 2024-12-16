@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\canje_comentarioController;
+use App\Http\Controllers\canjesController;
 use App\Http\Controllers\categoriaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -9,10 +10,11 @@ use App\Http\Controllers\escuelasController;
 use App\Http\Controllers\materialController;
 use App\Http\Controllers\recompensaController;
 use App\Http\Controllers\usuarioController;
+use App\Http\Controllers\reciclajeController;
 // routes/web.php
 
 Route::get('/', function () {
-    return view('welcome');
+    return view(view: 'static.comofunciona');
 });
 
 Route::get('/static', function () {
@@ -48,6 +50,10 @@ Route::get('/historial_canjes', [StaticPageController::class, 'historial_canjes'
 
 Route::get('/canjes', [StaticPageController::class, 'canjes'])
 ->name('public.canjes')->middleware('auth');
+
+Route::post('/canjes/store', [CanjesController::class, 'store'])
+    ->name('canjes.store')
+    ->middleware('auth');
 
 Route::get('/puntos', [StaticPageController::class, 'puntos'])
 ->name('public.puntos')->middleware('auth');
@@ -90,3 +96,11 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('canjecomentario', canje_comentarioController::class);
 });
+
+
+Route::prefix('admin')->middleware(['auth'])->group(function () {
+    Route::resource('reciclaje', reciclajeController::class);
+});
+
+Route::get('/registro', [App\Http\Controllers\RegistroController::class, 'index'])->middleware('auth')->name('index');;
+Route::post('/registro', [App\Http\Controllers\RegistroController::class, 'store'])->middleware('auth')->name('registro-persona.store');;

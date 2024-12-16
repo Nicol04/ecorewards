@@ -39,7 +39,7 @@
                             </div>
                             <div class="bg-white p-4">
                                 <div class="d-flex mb-2">
-                                    <a class="text-primary text-uppercase text-decoration-none" href="#">{{ $recompensa->nombreRecompensa }}</a>
+                                    <a class="text-primary text-uppercase text-decoration-none" href="{{ route('public.informacion_recompensas', $recompensa->idRecompensa) }}">{{ $recompensa->nombreRecompensa }}</a>
                                     <span class="text-primary px-2">|</span>
                                     <a class="text-primary text-uppercase text-decoration-none" href="#">{{ $recompensa->categorium->nombreCategoria }}</a>
                                 </div>
@@ -95,20 +95,6 @@
                     <p>En este apartado encontrarás los objetos que puedes cambiar.</p>
                 </div>
 
-                <!-- Formulario de búsqueda -->
-                <div class="mb-5">
-                    <div class="bg-white" style="padding: 30px;">
-                        <div class="input-group">
-                            <input type="text" class="form-control p-4" placeholder="Búsqueda">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-primary border-primary text-white">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Lista de Categorías -->
 <div class="mb-5">
     <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Categorías</h4>
@@ -130,29 +116,32 @@
 
                 <!-- Recent Post -->
                 <div class="mb-5">
-                        <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Canjes recientes:</h4>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="">
-                            <img class="img-fluid" src="img/cliente.png" height="100" width="100" alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Canjeó el 10/10/2024 una mochila capybara</h6>
-                                <small>Mariano Rojo</small>
-                            </div>
-                        </a>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="">
-                            <img class="img-fluid" src="img/cliente1.jpg" height="100" width="100" alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Canjeó el 04/10/2024 unos audifonos Sony inalámbricos</h6>
-                                <small>Lucía Pineda</small>
-                            </div>
-                        </a>
-                        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="">
-                            <img class="img-fluid" src="img/cliente2.png" height="100" width="100" alt="">
-                            <div class="pl-3">
-                                <h6 class="m-1">Canjeó el 04/10/2024 un mouse gaming gamer color azul</h6>
-                                <small>Sebastián García</small>
-                            </div>
-                        </a>
-                    </div>
+    <h4 class="text-uppercase mb-4" style="letter-spacing: 5px;">Canjes recientes:</h4>
+
+    @foreach ($canjesRecientes as $comentario)
+        <a class="d-flex align-items-center text-decoration-none bg-white mb-3" href="">
+            <!-- Mostrar la foto del objeto canjeado -->
+            <img class="img-fluid" src="{{ asset('storage/' . $comentario->fotoObjeto) }}" height="100" width="100" 
+            style="width: 150px; height: 150px; object-fit: cover;" alt="Imagen del objeto" >
+            
+            <div class="pl-3">
+                <!-- Fecha del canje -->
+                <h6 class="m-1">
+                    Canjeó el 
+                    {{ \Carbon\Carbon::parse($comentario->canje->fechaCanje)->format('d-m-Y') }}
+                    una {{ $comentario->canje->recompensa->nombreRecompensa }}
+                </h6>
+                <!-- Nombre del usuario -->
+                <small>
+                {{ explode(' ', $comentario->canje->usuario->persona->nombre ?? 'Anónimo')[0] }}
+                {{ explode(' ', $comentario->canje->usuario->persona->apellido ?? '')[0] }}
+                </small>
+            </div>
+        </a>
+    @endforeach
+</div>
+
+
             </div>
         </div>
     </div>
